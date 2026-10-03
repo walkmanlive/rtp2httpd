@@ -21,11 +21,11 @@ https://example.com/stream4
     expect(channels[0].name).toBe("Channel 3");
     expect(channels[0].groups).toEqual(["Group 1"]);
     expect(channels[0].sources).toEqual([
-      { url: "/stream3$Line 1", label: "Line 1", catchup: undefined, catchupSource: undefined },
-      { url: "/stream3-alt$Line 2", label: "Line 2", catchup: undefined, catchupSource: undefined },
+      { url: "https://example.com/stream3$Line 1", label: "Line 1", catchup: undefined, catchupSource: undefined },
+      { url: "https://example.com/stream3-alt$Line 2", label: "Line 2", catchup: undefined, catchupSource: undefined },
     ]);
     expect(channels[1].name).toBe("Channel 4");
-    expect(channels[1].sources.map((source) => source.url)).toEqual(["/stream4"]);
+    expect(channels[1].sources.map((source) => source.url)).toEqual(["https://example.com/stream4"]);
   });
 
   it("merges multi-URL entries with repeated #EXTINF entries of the same group and name", () => {
@@ -52,7 +52,7 @@ http://live.example/news-b
     expect(channels).toHaveLength(1);
     for (const source of channels[0].sources) {
       expect(source.catchup).toBe("default");
-      expect(source.catchupSource).toBe("/ch?playseek={utc:YmdHMS}-{utcend:YmdHMS}");
+      expect(source.catchupSource).toBe("http://cu.example/ch?playseek={utc:YmdHMS}-{utcend:YmdHMS}");
     }
     expect(channels[0].sources.map((source) => source.label)).toEqual([undefined, undefined]);
   });
@@ -65,7 +65,7 @@ https://example.com/only
 `);
 
     expect(channels).toHaveLength(1);
-    expect(channels[0].sources.map((source) => source.url)).toEqual(["/only"]);
+    expect(channels[0].sources.map((source) => source.url)).toEqual(["https://example.com/only"]);
   });
 });
 
