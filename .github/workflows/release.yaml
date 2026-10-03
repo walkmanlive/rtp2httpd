@@ -84,7 +84,7 @@ jobs:
           fi
           echo "Frontend pages are up-to-date."
 
-docker:
+  docker:
     name: Docker
     needs: frontend
     runs-on: ubuntu-latest
