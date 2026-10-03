@@ -68,7 +68,7 @@ const SPSParser = {
       if (j === 1) {
         b &= 0xfc;
       }
-      let h: string = codec_array[j].toString(16);
+      let h: string = b.toString(16);
       if (h.length < 2) {
         h = `0${h}`;
       }
