@@ -64,6 +64,10 @@ const SPSParser = {
     const codec_array: Uint8Array = uint8array.subarray(1, 4);
     let codec_mimetype: string = "avc1.";
     for (let j = 0; j < 3; j++) {
+      let b: number = codec_array[j];
+      if (j === 1) {
+        b &= 0xfc;
+      }
       let h: string = codec_array[j].toString(16);
       if (h.length < 2) {
         h = `0${h}`;
