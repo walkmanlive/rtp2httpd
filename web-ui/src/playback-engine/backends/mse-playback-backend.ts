@@ -5,7 +5,23 @@ import { createVideoRenderPipeline, type VideoRenderPipeline } from "../render";
 import type { LiveSessionAnchor, MSEPlaybackController, PlaybackBackend } from "../types";
 import Log from "../utils/logger";
 import { createPlaybackEventEmitter, resolveSegmentUrls } from "./backend-utils";
+const fixAvcCodec = (type: string): string =>
+  type.replace(
+    /(avc[13]\.)([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/g,
+    (_m, pre, p, c, l) =>
+      `${pre}${p}${(parseInt(c, 16) & 0xfc).toString(16).padStart(2, "0")}${l}`,
+  );
 
+for (const Ctor of [(globalThis as any).MediaSource, (globalThis as any).ManagedMediaSource]) {
+  if (!Ctor || Ctor.prototype.__avcFixed) continue;
+  const origAdd = Ctor.prototype.addSourceBuffer;
+  Ctor.prototype.addSourceBuffer = function (type: string) {
+    return origAdd.call(this, fixAvcCodec(type));
+  };
+  const origIs = Ctor.isTypeSupported;
+  Ctor.isTypeSupported = (type: string) => origIs.call(Ctor, fixAvcCodec(type));
+  Ctor.prototype.__avcFixed = true;
+}
 function resolveConfig(config?: Partial<PlayerConfig>): PlayerConfig {
   const fullConfig: PlayerConfig = { ...defaultConfig, ...config };
   fullConfig.logLevel = config?.logLevel ?? getRuntimeLogLevel() ?? fullConfig.logLevel;
