@@ -43,7 +43,7 @@ export function toPlaylistRelativePath(url: string): string {
 
   try {
     const parsed = new URL(url);
-    if (typeof window !== "undefined" && parsed.origin === window.location.origin) {
+    if (typeof window !== "undefined" && parsed.host === window.location.host) {
       return `${parsed.pathname}${parsed.search}${parsed.hash}`;
     }
     return url; // 外链不改
